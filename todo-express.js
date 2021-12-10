@@ -60,7 +60,7 @@ app.use(express.urlencoded({ extended: true }));
 // routes
 // GET
 app.get("/", (req, res) => {
-    res.render("todos.ejs", { todos: todos, foundtodo : foundtodo});
+    res.status(200).render("todos.ejs", { todos: todos, foundtodo : foundtodo});
 });
 
 // POST
