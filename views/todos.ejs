@@ -1,0 +1,53 @@
+<html>
+  <head>
+     <title>Todos list</title>
+     <style type="text/css">
+        <!--
+         .tab { margin-left: 40px; }
+        -->
+        </style>
+  </head>
+  <body>
+    <h2> Todo List </h2>
+    <ul>
+      <% todos.forEach( (todo) => {%>
+      <li> <%= todo.content %> <p class="tab"> Id:  <%= todo._id %>  </p> </li>
+      <% })%>
+    </ul>
+
+    <h2> Add a Todo </h2>
+    <form action ="/addtodo" method="POST">
+
+    <input type="text" name="newtodo" placeholder="Ex: Feed rabbit at 12pm" required>
+    <button> Add Todo </button>
+    
+    </form>
+
+    <form action ="/updatetodo" method="POST">
+    <h2> Update a Todo </h2>
+    <input type="text" name="_id" placeholder="Enter Id" required>
+    <input type="text" name="content" placeholder="Edit content" required>
+    <button> Update Todo </button>
+
+    </form>
+
+    <form action ="/removetodo" method="POST">
+    <h2> Delete a Todo </h2>
+    <input type="text" name="_id" placeholder="Enter Id" required>
+    <button> Remove Todo</button>
+    </form>
+
+    <form action ="/findtodo" method="POST">
+    <h2> Find a Todo </h2>
+    <input type="text" name="_id" placeholder="Enter Id" required>
+    <button> Find Todo </button>
+    </form>
+
+    <ul>
+      <% foundtodo.forEach( (todo) => {%>
+      <li> <%= todo.content %></li>
+      <% })%>
+    </ul>
+
+  </body>
+</html>

@@ -33,31 +33,71 @@ const { v4: uuidv4 } = require("uuid");
 const PORT = 8080;
 
 // fake data array
-const arrayEx = [
-  {
-    _id: uuidv4(),
-  },
-  {
-  },
+const todos = [
+    {   
+        content:'Walk the dog',
+        _id: uuidv4(), 
+    }, 
+    {   
+        content:'Pay rent',
+        _id: uuidv4(), 
+    }, 
+    {   
+        content:'Dentist at 8am',
+        _id: uuidv4(), 
+    }
 ];
 
+const foundtodo = [];
+
+
 // application level middleware
+app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(express.urlencoded({ extended: true }));
 
 // routes
+// GET
 app.get("/", (req, res) => {
-  res.send();
+    res.render("todos.ejs", { todos: todos, foundtodo : foundtodo});
 });
 
-//error handling
-function errorHandler(err, req, res, next) {
-  if (res.headersSent) {
-    return next(err);
+// POST
+app.post("/addtodo", (req, res) =>{
+    let newTodo = req.body.newtodo;
+    todos.push({content : newTodo, _id : uuidv4()});
+    res.redirect("/");
+});
+
+app.post('/updatetodo', (req, res) =>{
+  if ((todos.findIndex(function(todos) {return todos._id == req.body._id})) != -1){
+    let index = todos.findIndex(function(todos) {return todos._id == req.body._id})
+    todos[index].content = req.body.content
+    res.redirect("/");
+  }else{
+    res.status(404).send('The todo was not found');
   }
-  res.status(500);
-  res.render("error", { error: err });
-}
+});
+
+app.post("/removetodo", (req, res) =>{
+    if ((todos.findIndex(function(todos) {return todos._id == req.body._id})) != -1){
+        let index = todos.findIndex(function(todos) {return todos._id == req.body._id})
+        todos.splice(index, 1);
+        res.redirect("/");
+      }else{
+        res.status(404).send('The todo was not found');
+      }
+});
+
+app.post("/findtodo", (req, res) =>{
+    if ((todos.findIndex(function(todos) {return todos._id == req.body._id})) != -1){
+        foundtodo.push(todos.filter(function(todos) {return todos._id == req.body._id})[0]);
+        res.redirect("/");
+      }else{
+        res.status(404).send('The todo was not found');
+      }
+});
 
 // server startup logic
 app.listen(PORT, () => {
