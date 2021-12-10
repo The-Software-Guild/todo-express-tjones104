@@ -52,7 +52,7 @@ const foundtodo = [];
 
 
 // application level middleware
-app.set('view engine', 'ejs');
+//app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
@@ -60,40 +60,45 @@ app.use(express.urlencoded({ extended: true }));
 // routes
 // GET
 app.get("/", (req, res) => {
-    res.status(200).render("todos.ejs", { todos: todos, foundtodo : foundtodo});
+    //res.status(200).render("todos.ejs", { todos: todos, foundtodo : foundtodo});
+    res.status(200).send(todos);
 });
 
 // POST
 app.post("/addtodo", (req, res) =>{
     let newTodo = req.body.newtodo;
     todos.push({content : newTodo, _id : uuidv4()});
-    res.redirect("/");
+    //res.redirect("/");
+    res.status(204).send();
 });
 
-app.post('/updatetodo', (req, res) =>{
+app.put('/updatetodo', (req, res) =>{
   if ((todos.findIndex(function(todos) {return todos._id == req.body._id})) != -1){
     let index = todos.findIndex(function(todos) {return todos._id == req.body._id})
     todos[index].content = req.body.content
-    res.redirect("/");
+    //res.redirect("/");
+    res.status(204).send();
   }else{
     res.status(404).send('The todo was not found');
   }
 });
 
-app.post("/removetodo", (req, res) =>{
-    if ((todos.findIndex(function(todos) {return todos._id == req.body._id})) != -1){
-        let index = todos.findIndex(function(todos) {return todos._id == req.body._id})
-        todos.splice(index, 1);
-        res.redirect("/");
-      }else{
-        res.status(404).send('The todo was not found');
-      }
+app.delete("/removetodo", (req, res) =>{
+  if ((todos.findIndex(function(todos) {return todos._id == req.body._id})) != -1){
+      let index = todos.findIndex(function(todos) {return todos._id == req.body._id})
+      todos.splice(index, 1);
+      //res.redirect("/");
+      res.status(204).send();
+    }else{
+      res.status(404).send('The todo was not found');
+    }
 });
 
 app.post("/findtodo", (req, res) =>{
     if ((todos.findIndex(function(todos) {return todos._id == req.body._id})) != -1){
         foundtodo.push(todos.filter(function(todos) {return todos._id == req.body._id})[0]);
-        res.redirect("/");
+        //res.redirect("/");
+        res.status(204).send();
       }else{
         res.status(404).send('The todo was not found');
       }
